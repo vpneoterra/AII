@@ -47,6 +47,9 @@ mark{background:rgba(232,65,37,.12);color:var(--or);padding:1px 4px;border-radiu
 .glossary-btn{display:flex;align-items:center;gap:7px;padding:6px 14px;border-radius:4px;border:1px solid rgba(255,255,255,.12);background:transparent;color:var(--g400);font-family:var(--f);font-size:11px;font-weight:600;cursor:pointer;transition:all var(--tr)}
 .glossary-btn:hover{border-color:var(--or);color:var(--or);background:rgba(232,65,37,.06)}
 .glossary-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8}
+.dl-btn{display:flex;align-items:center;gap:7px;padding:6px 14px;border-radius:4px;border:1px solid rgba(232,65,37,.35);background:rgba(232,65,37,.08);color:var(--or);font-family:var(--f);font-size:11px;font-weight:600;cursor:pointer;transition:all var(--tr);text-decoration:none}
+.dl-btn:hover{border-color:var(--or);background:rgba(232,65,37,.15);color:#FF6B4A;text-decoration:none}
+.dl-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
 
 /* ===== SIDEBAR ===== */
 .sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sb);z-index:1000;background:var(--bk);display:flex;flex-direction:column;transition:transform var(--tr)}
@@ -254,6 +257,10 @@ mark{background:rgba(232,65,37,.12);color:var(--or);padding:1px 4px;border-radiu
       <svg viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h4"/></svg>
       Glossary
     </button>
+    <a class="dl-btn" href="https://drive.google.com/uc?export=download&id=1TZudThawRQAQRs6JAhFO1kMKH-v5d2PC" target="_blank" rel="noopener" aria-label="Download PDF Report">
+      <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+      Download PDF
+    </a>
   </div>
 </header>
 
@@ -273,6 +280,7 @@ mark{background:rgba(232,65,37,.12);color:var(--or);padding:1px 4px;border-radiu
     <div class="mob-brand">AI <span>Inference</span> Market</div>
   </div>
   <div class="mob-right">
+    <a class="mob-gloss-btn" href="https://drive.google.com/uc?export=download&id=1TZudThawRQAQRs6JAhFO1kMKH-v5d2PC" target="_blank" rel="noopener" aria-label="Download PDF"><svg viewBox="0 0 24 24" style="stroke:var(--or)"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></a>
     <button class="mob-gloss-btn" id="mobGlossOpen" aria-label="Glossary"><svg viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h4"/></svg></button>
     <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
