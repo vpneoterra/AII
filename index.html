@@ -51,6 +51,25 @@ mark{background:rgba(232,65,37,.12);color:var(--or);padding:1px 4px;border-radiu
 .dl-btn:hover{border-color:var(--or);background:rgba(232,65,37,.15);color:#FF6B4A;text-decoration:none}
 .dl-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
 
+/* Ecosystem drawer */
+.eco-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1100;opacity:0;pointer-events:none;transition:opacity var(--tr)}
+.eco-overlay.open{opacity:1;pointer-events:auto}
+.eco-drawer{position:fixed;top:0;right:0;bottom:0;width:calc(100vw - var(--sb));max-width:100vw;background:var(--wh);z-index:1101;transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-8px 0 48px rgba(0,0,0,.15)}
+.eco-drawer.open{transform:translateX(0)}
+.eco-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--bk);border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.eco-bar-title{font-size:13px;font-weight:700;color:var(--or);letter-spacing:.04em}
+.eco-bar-title span{color:var(--g400);font-weight:500}
+.eco-close{background:none;border:1px solid rgba(255,255,255,.1);border-radius:4px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;transition:all var(--tr)}
+.eco-close:hover{border-color:var(--or);background:rgba(232,65,37,.08)}
+.eco-close svg{width:16px;height:16px;stroke:var(--g400);stroke-width:2}
+.eco-frame{flex:1;border:none;width:100%;height:100%;background:#fff}
+.eco-btn{display:flex;align-items:center;gap:7px;padding:6px 14px;border-radius:4px;border:1px solid rgba(255,255,255,.12);background:transparent;color:var(--or);font-family:var(--f);font-size:11px;font-weight:600;cursor:pointer;transition:all var(--tr)}
+.eco-btn:hover{border-color:var(--or);background:rgba(232,65,37,.06)}
+.eco-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8}
+.mob-eco-btn{background:none;border:1px solid rgba(232,65,37,.25);border-radius:4px;padding:5px 8px;cursor:pointer;display:flex;align-items:center}
+.mob-eco-btn svg{width:16px;height:16px;stroke:var(--or);fill:none;stroke-width:1.8}
+
+
 /* ===== SIDEBAR ===== */
 .sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sb);z-index:1000;background:var(--bk);display:flex;flex-direction:column;transition:transform var(--tr)}
 .sb-hd{padding:26px 22px 18px;border-bottom:1px solid rgba(255,255,255,.06)}
@@ -186,6 +205,7 @@ mark{background:rgba(232,65,37,.12);color:var(--or);padding:1px 4px;border-radiu
   .s-stats{gap:18px}.s-header h2{font-size:22px}
   .site-footer{padding:32px 22px}.ft-meta{flex-direction:column}
   .gd-drawer{width:100vw}
+  .eco-drawer{width:100vw}
 }
 @media(max-width:480px){.hm-val{font-size:30px}.s-stats{flex-direction:column;gap:10px}}
 </style>
@@ -253,6 +273,10 @@ mark{background:rgba(232,65,37,.12);color:var(--or);padding:1px 4px;border-radiu
   </div>
   <div class="topbar-right">
     <div class="topbar-section" id="topbarSection">Overview</div>
+    <button class="eco-btn" id="ecoOpen" aria-label="Open Ecosystem">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="5" r="1.5"/><circle cx="18.5" cy="9" r="1.5"/><circle cx="18.5" cy="16" r="1.5"/><circle cx="12" cy="20" r="1.5"/><circle cx="5.5" cy="16" r="1.5"/><circle cx="5.5" cy="9" r="1.5"/><line x1="12" y1="8.5" x2="12" y2="5"/><line x1="14.5" y1="10.5" x2="18.5" y2="9"/><line x1="14.5" y1="13.5" x2="18.5" y2="16"/><line x1="12" y1="15" x2="12" y2="20"/><line x1="9.5" y1="13.5" x2="5.5" y2="16"/><line x1="9.5" y1="10.5" x2="5.5" y2="9"/></svg>
+      Ecosystem
+    </button>
     <button class="glossary-btn" id="glossaryOpen" aria-label="Open Glossary">
       <svg viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h4"/></svg>
       Glossary
@@ -280,12 +304,766 @@ mark{background:rgba(232,65,37,.12);color:var(--or);padding:1px 4px;border-radiu
     <div class="mob-brand">AI <span>Inference</span> Market</div>
   </div>
   <div class="mob-right">
+    <button class="mob-eco-btn" id="mobEcoOpen" aria-label="Ecosystem"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="5" r="1.5"/><circle cx="18.5" cy="9" r="1.5"/><circle cx="18.5" cy="16" r="1.5"/><circle cx="12" cy="20" r="1.5"/><circle cx="5.5" cy="16" r="1.5"/><circle cx="5.5" cy="9" r="1.5"/><line x1="12" y1="8.5" x2="12" y2="5"/><line x1="14.5" y1="10.5" x2="18.5" y2="9"/><line x1="14.5" y1="13.5" x2="18.5" y2="16"/><line x1="12" y1="15" x2="12" y2="20"/><line x1="9.5" y1="13.5" x2="5.5" y2="16"/><line x1="9.5" y1="10.5" x2="5.5" y2="9"/></svg></button>
     <a class="mob-gloss-btn" href="https://drive.google.com/uc?export=download&id=1TZudThawRQAQRs6JAhFO1kMKH-v5d2PC" target="_blank" rel="noopener" aria-label="Download PDF"><svg viewBox="0 0 24 24" style="stroke:var(--or)"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></a>
     <button class="mob-gloss-btn" id="mobGlossOpen" aria-label="Glossary"><svg viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h4"/></svg></button>
     <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </div>
 <div class="sb-ov" id="sbOv"></div>
+
+<!-- ===== ECOSYSTEM DRAWER ===== -->
+<div class="eco-overlay" id="ecoOverlay"></div>
+<div class="eco-drawer" id="ecoDrawer">
+  <div class="eco-bar">
+    <div class="eco-bar-title">AI Inference Ecosystem <span>&bull; Interactive Network Map</span></div>
+    <button class="eco-close" id="ecoClose" aria-label="Close"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <iframe class="eco-frame" id="ecoFrame" srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+<meta charset=&quot;UTF-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+<title>Global AI Inference Industry Ecosystem · 2026</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #ffffff;
+    --surface: #f7f7f8;
+    --border: rgba(0,0,0,0.08);
+    --text: #1a1a1a;
+    --muted: #888;
+    --gpu: #0f52ba;
+    --hyper: #7c3aed;
+    --asic: #0891b2;
+    --memory: #d97706;
+    --fab: #b45309;
+    --server: #6366f1;
+    --model: #c026d3;
+    --edge: #059669;
+    --cloud: #2563eb;
+    --china: #dc2626;
+    --infra: #64748b;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  canvas#bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  canvas#graph { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+
+  .header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+    padding: 22px 28px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 55%, rgba(255,255,255,0) 100%);
+  }
+  .header h1 {
+    font-weight: 700; font-size: 19px;
+    color: var(--text); line-height: 1.2;
+    letter-spacing: -0.3px;
+  }
+  .header h1 span {
+    display: block; font-weight: 400; font-size: 10.5px;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--muted); margin-top: 4px;
+  }
+
+  .legend {
+    position: fixed; top: 98px; left: 28px; z-index: 10;
+    display: flex; flex-wrap: wrap; gap: 5px;
+    pointer-events: auto; max-width: 280px; justify-content: flex-start;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 9.5px; font-weight: 600; letter-spacing: 0.4px;
+    text-transform: uppercase; color: var(--muted);
+    padding: 3px 9px; border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(6px);
+    cursor: pointer; transition: all 0.25s ease; user-select: none;
+  }
+  .legend-item:hover { border-color: rgba(0,0,0,0.2); }
+  .legend-item.active { border-color: rgba(0,0,0,0.3); color: var(--text); }
+  .legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  .tooltip {
+    position: fixed; z-index: 20; pointer-events: none;
+    opacity: 0; transition: opacity 0.18s ease;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 10px; max-width: 370px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .tooltip.visible { opacity: 1; }
+  .tooltip .t-name { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+  .tooltip .t-sector { font-size: 9.5px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+  .tooltip .t-desc { font-size: 11.5px; line-height: 1.55; color: #444; }
+  .tooltip .t-meta { margin-top: 5px; font-size: 10.5px; font-weight: 700; color: var(--text); }
+  .tooltip .t-links { margin-top: 7px; font-size: 10px; color: var(--muted); border-top: 1px solid rgba(0,0,0,0.06); padding-top: 6px; line-height: 1.6; }
+
+  .controls {
+    position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+    z-index: 10; display: flex; gap: 5px; pointer-events: auto;
+  }
+  .controls button {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted);
+    background: rgba(255,255,255,0.92); border: 1.5px solid var(--border);
+    padding: 6px 13px; border-radius: 999px; cursor: pointer;
+    backdrop-filter: blur(6px); transition: all 0.2s ease;
+  }
+  .controls button:hover { color: var(--text); border-color: rgba(0,0,0,0.25); }
+
+  .edge-legend {
+    position: fixed; bottom: 22px; right: 24px; z-index: 10;
+    display: flex; flex-direction: column; gap: 4px;
+    font-size: 9.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
+  }
+  .edge-legend div { display: flex; align-items: center; gap: 6px; }
+  .edge-legend .eline { width: 20px; height: 2px; border-radius: 1px; }
+
+  .stats {
+    position: fixed; bottom: 22px; left: 24px; z-index: 10;
+    font-size: 9.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); line-height: 1.8;
+  }
+
+  .search {
+    position: fixed; top: 68px; left: 28px; z-index: 10; pointer-events: auto;
+  }
+  .search input {
+    font-size: 12px;
+    padding: 6px 11px; border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(6px);
+    width: 200px; outline: none; color: var(--text);
+    transition: border-color 0.2s;
+  }
+  .search input:focus { border-color: rgba(0,0,0,0.25); }
+  .search input::placeholder { color: #bbb; }
+</style>
+</head>
+<body>
+
+<canvas id=&quot;bg&quot;></canvas>
+<canvas id=&quot;graph&quot;></canvas>
+
+<div class=&quot;header&quot;>
+  <h1>Global AI Inference Industry Ecosystem<span>Interactive Network Map · Early 2026 · ~$100–113B Market · 17–19% CAGR to $255B by 2030</span></h1>
+</div>
+
+<div class=&quot;legend&quot; id=&quot;legend&quot;></div>
+
+<div class=&quot;search&quot;><input type=&quot;text&quot; id=&quot;searchInput&quot; placeholder=&quot;Search players…&quot; oninput=&quot;onSearch(this.value)&quot;></div>
+
+<div class=&quot;tooltip&quot; id=&quot;tooltip&quot;>
+  <div class=&quot;t-name&quot;></div>
+  <div class=&quot;t-sector&quot;></div>
+  <div class=&quot;t-desc&quot;></div>
+  <div class=&quot;t-meta&quot;></div>
+  <div class=&quot;t-links&quot;></div>
+</div>
+
+<div class=&quot;controls&quot;>
+  <button onclick=&quot;resetView()&quot;>Reset View</button>
+  <button onclick=&quot;togglePhysics()&quot;>Pause Physics</button>
+  <button onclick=&quot;expandAll()&quot;>Explode</button>
+  <button onclick=&quot;showCritical()&quot;>Critical Only</button>
+</div>
+
+<div class=&quot;edge-legend&quot;>
+  <div><span class=&quot;eline&quot; style=&quot;background:#059669;&quot;></span>Supply / Partnership</div>
+  <div><span class=&quot;eline&quot; style=&quot;background:repeating-linear-gradient(90deg,#dc2626 0 4px,transparent 4px 8px);&quot;></span>Competition</div>
+  <div><span class=&quot;eline&quot; style=&quot;background:#7c3aed;&quot;></span>Investment / Ownership</div>
+  <div><span class=&quot;eline&quot; style=&quot;background:#d97706;&quot;></span>Customer / Depends-on</div>
+</div>
+
+<div class=&quot;stats&quot; id=&quot;stats&quot;></div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// DATA — Global AI Inference Industry Ecosystem 2026
+// ══════════════════════════════════════════════════════════
+const SECTORS = {
+  gpu:    { label: 'GPU Leaders',           color: '#0f52ba', glow: 'rgba(15,82,186,0.18)' },
+  hyper:  { label: 'Hyperscaler Silicon',   color: '#7c3aed', glow: 'rgba(124,58,237,0.15)' },
+  asic:   { label: 'ASIC Design / Startups',color: '#0891b2', glow: 'rgba(8,145,178,0.15)' },
+  memory: { label: 'Memory &amp; HBM',         color: '#d97706', glow: 'rgba(217,119,6,0.15)' },
+  fab:    { label: 'Manufacturing',         color: '#b45309', glow: 'rgba(180,83,9,0.15)' },
+  server: { label: 'Server OEMs',          color: '#6366f1', glow: 'rgba(99,102,241,0.15)' },
+  model:  { label: 'AI Model Developers',  color: '#c026d3', glow: 'rgba(192,38,211,0.15)' },
+  edge:   { label: 'Edge / On-Device',     color: '#059669', glow: 'rgba(5,150,105,0.15)' },
+  cloud:  { label: 'Cloud Platforms',      color: '#2563eb', glow: 'rgba(37,99,235,0.15)' },
+  china:  { label: 'China Ecosystem',      color: '#dc2626', glow: 'rgba(220,38,38,0.15)' },
+  infra:  { label: 'Infra / Cooling / Net',color: '#64748b', glow: 'rgba(100,116,139,0.15)' },
+};
+
+const C = [
+  // ── GPU Leaders ──
+  { id:'nvidia', name:'NVIDIA', sector:'gpu', size:68, desc:'$216B FY2026 revenue (+65% YoY). $194B data center. 80-92% AI GPU share. Blackwell Ultra B300: 15 PFLOPS FP4, 288GB HBM3e. Rubin (2H26): 50 PFLOPS. $20B Groq deal. CUDA: 4M+ devs.', meta:'Public (NVDA) · $3.5T mkt cap · Santa Clara, CA' },
+  { id:'amd', name:'AMD', sector:'gpu', size:48, desc:'$16.6B DC revenue FY2025 (+32%). MI355X: 288GB HBM3e, 10 PFLOPS FP8. 12 GW committed: 6 GW OpenAI + 6 GW Meta (gave ~20% equity). MI450 (2nm, HBM4) H2 2026. ROCm 7 closing CUDA gap.', meta:'Public (AMD) · $200B+ mkt cap · Santa Clara, CA' },
+  { id:'intel_gpu', name:'Intel', sector:'gpu', size:28, desc:'$53B revenue FY2024. Gaudi 3 struggles (<1% DC GPU share). Abandoned Falcon Shores. $8.9B CHIPS Act + $5B NVIDIA investment. Pivoting to foundry (Intel 18A). Xeon CPUs retain edge inference relevance.', meta:'Public (INTC) · Hillsboro, OR' },
+
+  // ── Hyperscaler Custom Silicon ──
+  { id:'google_tpu', name:'Google TPU', sector:'hyper', size:48, desc:'TPU v7 Ironwood: 4,614 FP8 TFLOPS, 192GB HBM3e, 9,216-chip pods (42.5 EXAFLOPS). ~44% lower TCO vs GB200. Trillium (v6e) GA with 100K+ chips. Anthropic committed 1M Ironwood TPUs.', meta:'Alphabet (GOOGL) · $175-185B 2026 capex' },
+  { id:'aws_silicon', name:'AWS Trainium', sector:'hyper', size:42, desc:'Trainium3: 3nm, 2.52 PFLOPS FP8, 144GB HBM3e. UltraClusters: 1M chips. Trn2 &quot;multi-billion $ biz&quot; growing 150% QoQ. Project Rainier: 500K Trn2 for Anthropic. Trn4 supports NVLink Fusion.', meta:'Amazon (AMZN) · $200B 2026 capex guided' },
+  { id:'ms_maia', name:'Microsoft Maia', sector:'hyper', size:36, desc:'Maia 200 (Jan 2026): 10+ PFLOPS FP4, 216GB HBM3e, 3nm, 140B+ transistors. Serves GPT-5.2 and M365 Copilot. 30% better perf/$ vs fleet. Supplements NVIDIA, does not replace.', meta:'Microsoft (MSFT) · $245B FY2025 rev' },
+  { id:'meta_mtia', name:'Meta MTIA', sector:'hyper', size:32, desc:'MTIA v2 (Artemis) deployed at scale for ranking/recommendation. 44% TCO reduction vs GPUs for those workloads. NOT used for LLM inference. MTIA v3 (Iris, 3nm) taping out for H2 2026.', meta:'Meta (META) · $115-135B 2026 capex' },
+
+  // ── ASIC Designers &amp; Startups ──
+  { id:'broadcom', name:'Broadcom', sector:'asic', size:46, desc:'60-80% custom ASIC design share. FY2025 AI rev: $20B (+65%). Designs TPU (Google), MTIA (Meta), OpenAI XPU. $73B AI backlog. CEO targets $100B AI chip rev by 2027.', meta:'Public (AVGO) · $1T+ mkt cap · San Jose, CA' },
+  { id:'marvell', name:'Marvell', sector:'asic', size:34, desc:'20-25% AI ASIC market. 18+ design wins, $75B lifetime rev potential. 2 programs in HV production (likely Amazon, Microsoft). Acquired Celestial AI ($3-5B). NVLink Fusion with NVIDIA.', meta:'Public (MRVL) · Wilmington, DE' },
+  { id:'cerebras', name:'Cerebras', sector:'asic', size:36, desc:'WSE-3: 900K cores on single wafer (5nm). $10B+ OpenAI deal for 750MW compute. Series G: $1.1B at $8.1B valuation. Q2 2026 IPO target at $15B+. 1,200 tokens/sec Llama 70B.', meta:'$4.7B+ raised · Sunnyvale, CA' },
+  { id:'groq', name:'Groq (NVIDIA)', sector:'asic', size:30, desc:'LPU: deterministic latency, 500+ tok/s Llama 70B. $20B NVIDIA acquisition (Dec 2025)—tech licensing + talent deal. GroqCloud serves 2M+ devs. Operates independently under Simon Edwards.', meta:'NVIDIA subsidiary · Mountain View, CA' },
+  { id:'etched', name:'Etched', sector:'asic', size:26, desc:'Sohu: transformer-only ASIC (4nm). Claims 1 server (8 chips) replaces 160 H100s. ~$1B raised at $5B valuation. High-risk bet: if transformers are superseded, chip is obsolete.', meta:'$1B+ raised · Cupertino, CA' },
+  { id:'dmatrix', name:'d-Matrix', sector:'asic', size:24, desc:'Digital in-memory compute. Corsair chip shipping. $275M raised (Nov 2025) at $2B. Claims 30K tok/s Llama 70B. Microsoft-backed. Targets enterprise inference at 10x lower cost.', meta:'$400M+ raised · Santa Clara, CA' },
+  { id:'tenstorrent', name:'Tenstorrent', sector:'asic', size:26, desc:'Jim Keller\'s RISC-V AI company. Blackhole: 745 TFLOPS FP8 using GDDR6 (no HBM). $693M raised (Dec 2024) at $2B. In talks for $800M more at $3.2B. Open-source ISA approach.', meta:'$1B+ raised · Toronto, Canada' },
+  { id:'sambanova', name:'SambaNova', sector:'asic', size:20, desc:'RDU (reconfigurable dataflow). Pivoted to inference. Intel attempted $1.6B acquisition (stalled). Raising $350M from Intel consortium (Feb 2026). SN40L for enterprise LLM serving.', meta:'$1.5B+ raised · Palo Alto, CA' },
+
+  // ── Memory &amp; HBM ──
+  { id:'skhynix', name:'SK Hynix', sector:'memory', size:44, desc:'52-62% HBM market share. ~$70B rev (2025). 49% operating margin. First to complete HBM4 dev (>10 Gbps). NVIDIA drives ~27% of total revenue. HBM supply sold out through 2026. Planning 20% price hike.', meta:'Public (000660.KS) · Icheon, South Korea' },
+  { id:'samsung_mem', name:'Samsung Memory', sector:'memory', size:38, desc:'~17-25% HBM share (fell after HBM3e qualification delays). Passed NVIDIA 12-layer HBM3e test Sep 2025. HBM4 reportedly highest eval scores. Samsung Foundry: alternative to TSMC.', meta:'Samsung Electronics · Hwaseong, South Korea' },
+  { id:'micron', name:'Micron', sector:'memory', size:32, desc:'19-23% HBM share. $29B FY2025 rev. $10B from HBM + high-cap DIMMs (5x YoY). 30% lower power HBM3e. HBM4 samples shipped (>2.8 TB/s). DDR5 for AI servers strong. US-headquartered strategic value.', meta:'Public (MU) · Boise, ID' },
+
+  // ── Manufacturing ──
+  { id:'tsmc', name:'TSMC', sector:'fab', size:52, desc:'>90% of advanced AI chips. $122B rev 2025 (+36%). AI = 17-19% of rev → mid-40s% CAGR. CoWoS: 75-80K wafers/mo (2025), targeting 120-130K (2026). NVIDIA takes >60% CoWoS. $52-56B 2026 capex.', meta:'Public (TSM) · Hsinchu, Taiwan' },
+  { id:'amkor', name:'Amkor / SPIL', sector:'fab', size:22, desc:'TSMC outsources 240-270K CoWoS wafers/yr to Amkor and SPIL. Critical overflow capacity for advanced packaging. Amkor building new Arizona plant near TSMC fabs.', meta:'Public (AMKR) · Tempe, AZ' },
+
+  // ── Server OEMs ──
+  { id:'dell', name:'Dell Technologies', sector:'server', size:36, desc:'$24.6B AI server rev FY2026 (+150%). $43B AI backlog. Guides $50B+ FY2027. First GB300 NVL72 shipments. ISG AI-optimized server rev surpassed traditional. PowerEdge XE9680L flagship.', meta:'Public (DELL) · Round Rock, TX' },
+  { id:'supermicro', name:'Supermicro', sector:'server', size:32, desc:'Targets $36-40B FY2026. First to ship GB300 NVL72 (Sep 2025). Liquid-cooled rack expertise. But: material internal control weaknesses, DOJ/SEC subpoenas, 14-mo CFO vacancy.', meta:'Public (SMCI) · San Jose, CA' },
+  { id:'hpe', name:'HPE', sector:'server', size:28, desc:'$6.8B AI server orders FY2025. Closed $14B Juniper acquisition (Jul 2025). Cray EX supercomputers for sovereign AI. GreenLake cloud platform integrates NVIDIA DGX.', meta:'Public (HPE) · Spring, TX' },
+  { id:'lenovo_sv', name:'Lenovo', sector:'server', size:22, desc:'~12% global server share. ThinkSystem SR680a V3 for AI. Growing China domestic AI server demand. Partners with both NVIDIA and Huawei Ascend.', meta:'Public (0992.HK) · Beijing, China' },
+
+  // ── AI Model Developers ──
+  { id:'openai', name:'OpenAI', sector:'model', size:50, desc:'$110B raise (Feb 2026) at $730B val. GPT-4o, GPT-5.2. 800M+ weekly users. Infra across NVIDIA (10 GW), AMD (6 GW), Broadcom XPU (10 GW), Cerebras (750 MW). $138B AWS deal. $300B Oracle.', meta:'Private · $730B val · San Francisco, CA' },
+  { id:'anthropic', name:'Anthropic', sector:'model', size:40, desc:'$30B raise (Feb 2026) at $380B val. Claude Sonnet/Opus. Amazon $8B (7.8%), Google $3B (14%), MSFT $5B. 1M Google Ironwood TPUs + 500K AWS Trn2 chips. $80B+ cloud spend through 2029.', meta:'Private · $380B val · San Francisco, CA' },
+  { id:'deepmind', name:'Google DeepMind', sector:'model', size:36, desc:'Gemini 2.0 Pro/Flash. Internal + Cloud inference on TPU v6e/v7. Flash at $0.10/M input tokens—among cheapest frontier models. Drives massive internal TPU demand.', meta:'Alphabet (GOOGL) · London/Mountain View' },
+  { id:'meta_ai', name:'Meta AI / Llama', sector:'model', size:34, desc:'Llama 3.1 405B open-weight. Drives massive third-party inference demand. Internal: billions of daily inference requests for ranking, ads, Reels. 2026 capex $115-135B.', meta:'Meta (META) · Menlo Park, CA' },
+  { id:'xai', name:'xAI', sector:'model', size:28, desc:'Grok-3. Memphis Colossus cluster: 200K H100s → expanding with Blackwell. $6B Series C funding. Competing for frontier model position. Heavy NVIDIA dependence.', meta:'Private · $50B+ val · Memphis, TN' },
+  { id:'mistral', name:'Mistral AI', sector:'model', size:22, desc:'Mistral Large 2, Mixtral MoE. European AI champion. Partners with Microsoft Azure. Open-weight models drive inference diversity. $2B+ valuation.', meta:'Private · $2B+ val · Paris, France' },
+  { id:'deepseek', name:'DeepSeek', sector:'model', size:26, desc:'V3.2 at $0.28/$0.42 per M tokens—lowest frontier pricing. MoE architecture optimized for inference efficiency. Open-weight. Triggered industry price war. China-based.', meta:'Private · Hangzhou, China' },
+
+  // ── Edge / On-Device ──
+  { id:'apple', name:'Apple', sector:'edge', size:40, desc:'M5 Neural Accelerator: >4x AI compute vs M4 (38 TOPS). 1.5B+ active devices. Apple Intelligence on-device. Neural Engine enables private, low-latency inference. $100B+ services rev.', meta:'Public (AAPL) · $3.5T mkt cap · Cupertino, CA' },
+  { id:'qualcomm', name:'Qualcomm', sector:'edge', size:34, desc:'Snapdragon X2 Elite: 80 TOPS NPU. Snapdragon 8 Elite: 75 TOPS mobile. 2B+ Android devices. Cloud AI 100 for DC edge. $45B automotive pipeline. AI PC push with Copilot+.', meta:'Public (QCOM) · San Diego, CA' },
+  { id:'mediatek', name:'MediaTek', sector:'edge', size:24, desc:'Dimensity 9400 NPU: 50 TOPS (3nm). Powers mid-to-high Android devices. Growing AI SoC share in smartphones, IoT, automotive. Key TSMC 3nm customer.', meta:'Public (2454.TW) · Hsinchu, Taiwan' },
+
+  // ── Cloud Platforms ──
+  { id:'aws_cloud', name:'AWS', sector:'cloud', size:42, desc:'$107.6B FY2024 rev. Largest cloud (31% share). SageMaker, Bedrock for inference. H100/B200 + Trainium/Inferentia instances. $138B OpenAI deal. $200B 2026 capex.', meta:'Amazon (AMZN) · Seattle, WA' },
+  { id:'azure', name:'Microsoft Azure', sector:'cloud', size:40, desc:'~25% cloud share. Azure AI rev growing 60%+ YoY. $37.5B quarterly capex. OpenAI exclusive partner (partial). Maia 200 + NVIDIA Blackwell. Copilot monetization.', meta:'Microsoft (MSFT) · Redmond, WA' },
+  { id:'gcloud', name:'Google Cloud', sector:'cloud', size:36, desc:'$43.2B annualized rev. TPU advantage: $0.39/chip-hr for Trillium. Vertex AI platform. Anthropic 1M TPU deal. Gemini API. 11% cloud share, fastest-growing major.', meta:'Alphabet (GOOGL) · Mountain View, CA' },
+  { id:'oracle_cl', name:'Oracle Cloud', sector:'cloud', size:28, desc:'$300B OpenAI deal. OCI AI Infrastructure: NVIDIA + AMD GPUs. RDMA clusters to 131K GPUs. Fastest-growing cloud for AI workloads. Gen2 Cloud with bare-metal performance.', meta:'Public (ORCL) · Austin, TX' },
+  { id:'coreweave', name:'CoreWeave', sector:'cloud', size:26, desc:'GPU cloud pure-play. 250K+ NVIDIA GPUs. IPO (Mar 2025) at $23B. $15.5B in customer commitments. Key OpenAI/Microsoft cloud partner for GPU compute overflow.', meta:'Public (CRWV) · Roseland, NJ' },
+
+  // ── China Ecosystem ──
+  { id:'huawei', name:'Huawei Ascend', sector:'china', size:38, desc:'Ascend 910C: dual-die SMIC 7nm, ~60% H100 perf. 700K-1M units shipped (2025). MindSpore framework. 75% China DCs still on CUDA but migration accelerating. $100B+ rev.', meta:'Private · Shenzhen, China' },
+  { id:'cambricon', name:'Cambricon', sector:'china', size:22, desc:'First quarterly profit 2025, revenue jumped 43x. MLU370/MLU590 AI accelerators. Government-backed. Listed on Shanghai STAR Market. Domestic AI training/inference.', meta:'Public (688256.SS) · Beijing, China' },
+  { id:'biren', name:'Biren Technology', sector:'china', size:22, desc:'BR100/BR200 GPUs. IPO Jan 2026 on HKEX: HK$90B market cap. Targets NVIDIA H100-class performance on 7nm. Government procurement-driven revenue.', meta:'Public (HKEX) · Shanghai, China' },
+  { id:'moore_threads', name:'Moore Threads', sector:'china', size:20, desc:'MTT S4000 GPU. IPO Dec 2025 on Shanghai, stock surged 400%. Focus: general-purpose GPU for both graphics and AI inference. SMIC manufacturing.', meta:'Public (688411.SS) · Beijing, China' },
+
+  // ── Infrastructure / Cooling / Networking ──
+  { id:'vertiv', name:'Vertiv', sector:'infra', size:28, desc:'$9.5B order backlog (+30% YoY). Leading liquid cooling for AI DCs. Deep NVIDIA co-development for GB300 thermal solutions. Direct-to-chip cooling at 120kW+ per rack.', meta:'Public (VRT) · Columbus, OH' },
+  { id:'arista', name:'Arista Networks', sector:'infra', size:24, desc:'AI networking leader. 400G/800G Ethernet switches for inference clusters. Ultra Ethernet Consortium founding member. Growing share vs InfiniBand for inference (vs training).', meta:'Public (ANET) · Santa Clara, CA' },
+  { id:'schneider', name:'Schneider Electric', sector:'infra', size:22, desc:'Acquired Motivair (~$850M) for liquid cooling. EcoStruxure for AI DC management. Galaxy VX UPS for high-density racks. Competing with Vertiv for AI cooling TAM.', meta:'Public (SU.PA) · Rueil-Malmaison, France' },
+];
+
+const E = [
+  // ── NVIDIA cluster ──
+  { s:'nvidia', t:'tsmc',       type:'customer',str:0.95 },
+  { s:'nvidia', t:'skhynix',    type:'customer',str:0.9 },
+  { s:'nvidia', t:'samsung_mem',type:'customer',str:0.5 },
+  { s:'nvidia', t:'micron',     type:'customer',str:0.5 },
+  { s:'nvidia', t:'dell',       type:'partner', str:0.8 },
+  { s:'nvidia', t:'supermicro', type:'partner', str:0.85 },
+  { s:'nvidia', t:'hpe',        type:'partner', str:0.7 },
+  { s:'nvidia', t:'groq',       type:'invest',  str:0.9 },
+  { s:'nvidia', t:'intel_gpu',  type:'invest',  str:0.4 },
+  { s:'nvidia', t:'marvell',    type:'partner', str:0.6 },
+  { s:'nvidia', t:'openai',     type:'partner', str:0.9 },
+  { s:'nvidia', t:'meta_ai',    type:'partner', str:0.85 },
+  { s:'nvidia', t:'anthropic',  type:'partner', str:0.5 },
+  { s:'nvidia', t:'xai',        type:'partner', str:0.7 },
+  { s:'nvidia', t:'coreweave',  type:'partner', str:0.7 },
+  { s:'nvidia', t:'vertiv',     type:'partner', str:0.7 },
+  { s:'nvidia', t:'arista',     type:'partner', str:0.5 },
+
+  // ── AMD cluster ──
+  { s:'amd', t:'tsmc',        type:'customer',str:0.9 },
+  { s:'amd', t:'skhynix',     type:'customer',str:0.6 },
+  { s:'amd', t:'samsung_mem', type:'customer',str:0.5 },
+  { s:'amd', t:'micron',      type:'customer',str:0.5 },
+  { s:'amd', t:'openai',      type:'partner', str:0.85 },
+  { s:'amd', t:'meta_ai',     type:'partner', str:0.85 },
+  { s:'amd', t:'dell',        type:'partner', str:0.6 },
+  { s:'amd', t:'oracle_cl',   type:'partner', str:0.5 },
+  { s:'amd', t:'supermicro',  type:'partner', str:0.5 },
+
+  // ── GPU competition ──
+  { s:'nvidia', t:'amd',       type:'compete', str:0.85 },
+  { s:'nvidia', t:'intel_gpu', type:'compete', str:0.4 },
+  { s:'amd',    t:'intel_gpu', type:'compete', str:0.5 },
+
+  // ── Hyperscaler silicon ──
+  { s:'google_tpu', t:'tsmc',        type:'customer',str:0.85 },
+  { s:'google_tpu', t:'broadcom',    type:'partner', str:0.9 },
+  { s:'google_tpu', t:'skhynix',     type:'customer',str:0.6 },
+  { s:'google_tpu', t:'anthropic',   type:'partner', str:0.85 },
+  { s:'google_tpu', t:'deepmind',    type:'partner', str:0.95 },
+  { s:'google_tpu', t:'gcloud',      type:'partner', str:0.95 },
+  { s:'google_tpu', t:'nvidia',      type:'compete', str:0.7 },
+
+  { s:'aws_silicon', t:'tsmc',       type:'customer',str:0.8 },
+  { s:'aws_silicon', t:'anthropic',  type:'partner', str:0.8 },
+  { s:'aws_silicon', t:'aws_cloud',  type:'partner', str:0.95 },
+  { s:'aws_silicon', t:'nvidia',     type:'compete', str:0.6 },
+  { s:'aws_silicon', t:'skhynix',    type:'customer',str:0.5 },
+
+  { s:'ms_maia', t:'tsmc',     type:'customer',str:0.75 },
+  { s:'ms_maia', t:'azure',    type:'partner', str:0.9 },
+  { s:'ms_maia', t:'nvidia',   type:'compete', str:0.5 },
+
+  { s:'meta_mtia', t:'tsmc',    type:'customer',str:0.7 },
+  { s:'meta_mtia', t:'broadcom',type:'partner', str:0.7 },
+  { s:'meta_mtia', t:'meta_ai', type:'partner', str:0.9 },
+
+  // ── ASIC ecosystem ──
+  { s:'broadcom', t:'tsmc',      type:'customer',str:0.85 },
+  { s:'broadcom', t:'openai',    type:'partner', str:0.7 },
+  { s:'broadcom', t:'nvidia',    type:'compete', str:0.6 },
+  { s:'broadcom', t:'marvell',   type:'compete', str:0.6 },
+
+  { s:'marvell', t:'tsmc',       type:'customer',str:0.7 },
+  { s:'marvell', t:'aws_silicon',type:'partner', str:0.6 },
+
+  { s:'cerebras', t:'openai',    type:'partner', str:0.8 },
+  { s:'cerebras', t:'tsmc',      type:'customer',str:0.5 },
+  { s:'cerebras', t:'nvidia',    type:'compete', str:0.5 },
+
+  { s:'etched', t:'tsmc',       type:'customer',str:0.4 },
+  { s:'etched', t:'nvidia',     type:'compete', str:0.4 },
+  { s:'etched', t:'groq',       type:'compete', str:0.4 },
+
+  { s:'dmatrix', t:'azure',     type:'partner', str:0.4 },
+  { s:'dmatrix', t:'nvidia',    type:'compete', str:0.3 },
+
+  { s:'tenstorrent',t:'nvidia',  type:'compete', str:0.35 },
+  { s:'sambanova', t:'intel_gpu',type:'partner', str:0.5 },
+  { s:'sambanova', t:'nvidia',   type:'compete', str:0.3 },
+
+  { s:'groq', t:'cerebras',     type:'compete', str:0.5 },
+  { s:'groq', t:'etched',       type:'compete', str:0.4 },
+
+  // ── Memory supply ──
+  { s:'skhynix',     t:'samsung_mem', type:'compete', str:0.7 },
+  { s:'skhynix',     t:'micron',      type:'compete', str:0.6 },
+  { s:'samsung_mem', t:'micron',      type:'compete', str:0.5 },
+
+  // ── Manufacturing ──
+  { s:'tsmc', t:'amkor',  type:'partner', str:0.7 },
+
+  // ── Server OEMs ──
+  { s:'dell',      t:'supermicro', type:'compete', str:0.6 },
+  { s:'dell',      t:'hpe',       type:'compete', str:0.5 },
+  { s:'supermicro',t:'hpe',       type:'compete', str:0.5 },
+  { s:'lenovo_sv', t:'dell',      type:'compete', str:0.3 },
+  { s:'lenovo_sv', t:'huawei',    type:'partner', str:0.4 },
+
+  // ── Model developer → cloud/infra ──
+  { s:'openai', t:'azure',     type:'partner', str:0.9 },
+  { s:'openai', t:'aws_cloud', type:'partner', str:0.75 },
+  { s:'openai', t:'oracle_cl', type:'partner', str:0.7 },
+  { s:'openai', t:'coreweave', type:'partner', str:0.6 },
+
+  { s:'anthropic', t:'aws_cloud', type:'partner', str:0.85 },
+  { s:'anthropic', t:'gcloud',    type:'partner', str:0.75 },
+
+  { s:'deepmind', t:'gcloud',    type:'partner', str:0.9 },
+  { s:'meta_ai',  t:'meta_mtia', type:'partner', str:0.7 },
+  { s:'xai',      t:'oracle_cl', type:'partner', str:0.5 },
+  { s:'mistral',  t:'azure',     type:'partner', str:0.5 },
+
+  // ── Model competition ──
+  { s:'openai',   t:'anthropic', type:'compete', str:0.8 },
+  { s:'openai',   t:'deepmind',  type:'compete', str:0.7 },
+  { s:'openai',   t:'meta_ai',   type:'compete', str:0.6 },
+  { s:'openai',   t:'deepseek',  type:'compete', str:0.5 },
+  { s:'anthropic',t:'deepmind',  type:'compete', str:0.6 },
+  { s:'deepseek', t:'deepmind',  type:'compete', str:0.5 },
+  { s:'mistral',  t:'meta_ai',   type:'compete', str:0.4 },
+
+  // ── Cloud competition ──
+  { s:'aws_cloud', t:'azure',   type:'compete', str:0.7 },
+  { s:'aws_cloud', t:'gcloud',  type:'compete', str:0.6 },
+  { s:'azure',     t:'gcloud',  type:'compete', str:0.6 },
+  { s:'oracle_cl', t:'aws_cloud',type:'compete',str:0.4 },
+  { s:'coreweave', t:'aws_cloud',type:'compete',str:0.3 },
+
+  // ── Edge silicon ──
+  { s:'apple',    t:'tsmc',      type:'customer',str:0.8 },
+  { s:'qualcomm', t:'tsmc',      type:'customer',str:0.7 },
+  { s:'mediatek', t:'tsmc',      type:'customer',str:0.6 },
+  { s:'apple',    t:'qualcomm',  type:'compete', str:0.6 },
+  { s:'qualcomm', t:'mediatek',  type:'compete', str:0.5 },
+
+  // ── China ecosystem ──
+  { s:'huawei',   t:'deepseek',     type:'partner', str:0.5 },
+  { s:'huawei',   t:'nvidia',       type:'compete', str:0.5 },
+  { s:'huawei',   t:'cambricon',    type:'compete', str:0.4 },
+  { s:'huawei',   t:'biren',        type:'compete', str:0.4 },
+  { s:'cambricon',t:'biren',        type:'compete', str:0.4 },
+  { s:'cambricon',t:'moore_threads',type:'compete', str:0.3 },
+  { s:'biren',    t:'moore_threads',type:'compete', str:0.3 },
+
+  // ── Investment relationships ──
+  { s:'openai',    t:'nvidia',  type:'invest', str:0.5 },
+  { s:'aws_cloud', t:'anthropic',type:'invest',str:0.7 },
+  { s:'gcloud',    t:'anthropic',type:'invest',str:0.5 },
+  { s:'azure',     t:'openai',   type:'invest',str:0.85 },
+  { s:'aws_cloud', t:'openai',   type:'invest',str:0.6 },
+
+  // ── Infra connections ──
+  { s:'vertiv',    t:'dell',      type:'partner', str:0.5 },
+  { s:'vertiv',    t:'supermicro',type:'partner', str:0.5 },
+  { s:'schneider', t:'hpe',      type:'partner', str:0.4 },
+  { s:'schneider', t:'vertiv',   type:'compete', str:0.5 },
+  { s:'arista',    t:'aws_cloud',type:'partner', str:0.5 },
+  { s:'arista',    t:'azure',    type:'partner', str:0.4 },
+];
+
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
+let W, H, dpr;
+let nodes = [], edges = [];
+let hoveredNode = null, dragNode = null;
+let physicsOn = true, filterSector = null, searchTerm = '', criticalOnly = false;
+let camX = 0, camY = 0, camZoom = 1;
+let targetCamX = 0, targetCamY = 0, targetCamZoom = 1;
+let mouseX = 0, mouseY = 0;
+let isPanning = false, panStartX, panStartY, panCamStartX, panCamStartY;
+let time = 0;
+
+const canvas = document.getElementById('graph');
+const ctx = canvas.getContext('2d');
+const bgCanvas = document.getElementById('bg');
+const bgCtx = bgCanvas.getContext('2d');
+const tooltip = document.getElementById('tooltip');
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  W = window.innerWidth; H = window.innerHeight;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  bgCanvas.width = W * dpr; bgCanvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  bgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  drawBg();
+}
+window.addEventListener('resize', resize);
+
+// Build legend
+const legendEl = document.getElementById('legend');
+Object.entries(SECTORS).forEach(([key, s]) => {
+  const el = document.createElement('div');
+  el.className = 'legend-item active'; el.dataset.sector = key;
+  el.innerHTML = `<span class=&quot;legend-dot&quot; style=&quot;background:${s.color}&quot;></span>${s.label}`;
+  el.addEventListener('click', () => {
+    if (filterSector === key) { filterSector = null; document.querySelectorAll('.legend-item').forEach(e => e.classList.add('active')); }
+    else { filterSector = key; document.querySelectorAll('.legend-item').forEach(e => e.classList.toggle('active', e.dataset.sector === key)); }
+  });
+  legendEl.appendChild(el);
+});
+
+resize();
+
+nodes = C.map((c) => {
+  const sectorKeys = Object.keys(SECTORS);
+  const sIdx = sectorKeys.indexOf(c.sector);
+  const sameS = C.filter(x => x.sector === c.sector);
+  const posInS = sameS.indexOf(c);
+  const sAngle = (sIdx / sectorKeys.length) * Math.PI * 2 - Math.PI / 2;
+  const spread = 0.6;
+  const angle = sAngle + (posInS - sameS.length / 2) * spread / Math.max(sameS.length, 1);
+  const radius = 180 + c.size * 2.2 + Math.random() * 60;
+  return {
+    ...c,
+    x: W / 2 + Math.cos(angle) * radius,
+    y: H / 2 + Math.sin(angle) * radius,
+    vx: 0, vy: 0,
+    baseRadius: c.size * 0.32,
+    displayRadius: c.size * 0.32,
+    opacity: 1,
+    pulsePhase: Math.random() * Math.PI * 2,
+  };
+});
+
+edges = E.map(e => ({
+  ...e,
+  sourceNode: nodes.find(n => n.id === e.s),
+  targetNode: nodes.find(n => n.id === e.t),
+  particlePos: Math.random(),
+})).filter(e => e.sourceNode &amp;&amp; e.targetNode);
+
+// ══════════════════════════════════════════════════════════
+// BACKGROUND
+// ══════════════════════════════════════════════════════════
+function drawBg() {
+  bgCtx.fillStyle = '#ffffff';
+  bgCtx.fillRect(0, 0, W, H);
+  bgCtx.fillStyle = 'rgba(0,0,0,0.025)';
+  const sp = 28;
+  for (let x = 0; x < W; x += sp) for (let y = 0; y < H; y += sp) { bgCtx.beginPath(); bgCtx.arc(x, y, 0.5, 0, Math.PI * 2); bgCtx.fill(); }
+  const rg = bgCtx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W,H)*0.55);
+  rg.addColorStop(0, 'rgba(15,82,186,0.02)'); rg.addColorStop(0.4, 'rgba(124,58,237,0.01)'); rg.addColorStop(1, 'rgba(255,255,255,0)');
+  bgCtx.fillStyle = rg; bgCtx.fillRect(0, 0, W, H);
+}
+
+// ══════════════════════════════════════════════════════════
+// PHYSICS
+// ══════════════════════════════════════════════════════════
+function simulate() {
+  if (!physicsOn) return;
+  const centerX = W / 2, centerY = H / 2;
+  const damping = 0.86, repulsion = 2800, attraction = 0.00032, centerGravity = 0.0004;
+
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const a = nodes[i], b = nodes[j];
+      let dx = b.x - a.x, dy = b.y - a.y;
+      let dist = Math.sqrt(dx*dx + dy*dy) || 1;
+      let force = repulsion / (dist * dist);
+      let fx = (dx/dist)*force, fy = (dy/dist)*force;
+      a.vx -= fx; a.vy -= fy; b.vx += fx; b.vy += fy;
+    }
+  }
+  edges.forEach(e => {
+    const a = e.sourceNode, b = e.targetNode;
+    let dx = b.x-a.x, dy = b.y-a.y;
+    let dist = Math.sqrt(dx*dx+dy*dy) || 1;
+    const idealDist = 130 + (a.baseRadius + b.baseRadius) * 1.8;
+    let force = (dist - idealDist) * attraction * e.str * 3;
+    let fx = (dx/dist)*force, fy = (dy/dist)*force;
+    a.vx += fx; a.vy += fy; b.vx -= fx; b.vy -= fy;
+  });
+  nodes.forEach(n => { n.vx += (centerX-n.x)*centerGravity; n.vy += (centerY-n.y)*centerGravity; });
+  nodes.forEach(n => { if (n === dragNode) return; n.vx *= damping; n.vy *= damping; n.x += n.vx; n.y += n.vy; });
+}
+
+// ══════════════════════════════════════════════════════════
+// RENDERING
+// ══════════════════════════════════════════════════════════
+function wts(x, y) { return [(x-camX)*camZoom+W/2, (y-camY)*camZoom+H/2]; }
+function stw(sx, sy) { return [(sx-W/2)/camZoom+camX, (sy-H/2)/camZoom+camY]; }
+
+function isVisible(node) {
+  if (searchTerm) return node.name.toLowerCase().includes(searchTerm);
+  if (!filterSector) return true;
+  if (node.sector === filterSector) return true;
+  return edges.some(e =>
+    (e.s === node.id &amp;&amp; nodes.find(n => n.id === e.t)?.sector === filterSector) ||
+    (e.t === node.id &amp;&amp; nodes.find(n => n.id === e.s)?.sector === filterSector)
+  );
+}
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  camX += (targetCamX - camX) * 0.08;
+  camY += (targetCamY - camY) * 0.08;
+  camZoom += (targetCamZoom - camZoom) * 0.08;
+
+  nodes.forEach(n => { const vis = isVisible(n); n.opacity += ((vis ? 1 : 0.06) - n.opacity) * 0.08; });
+
+  // ── EDGES ──
+  edges.forEach(e => {
+    const a = e.sourceNode, b = e.targetNode;
+    const alpha = Math.min(a.opacity, b.opacity);
+    if (alpha < 0.02) return;
+    if (criticalOnly &amp;&amp; e.str < 0.6) return;
+    const [x1,y1] = wts(a.x, a.y), [x2,y2] = wts(b.x, b.y);
+    const isHL = hoveredNode &amp;&amp; (a.id === hoveredNode.id || b.id === hoveredNode.id);
+    const baseAlpha = isHL ? 0.55 : 0.09;
+    let col;
+    if (e.type === 'partner')      col = `rgba(5,150,105,${baseAlpha*alpha})`;
+    else if (e.type === 'compete') col = `rgba(220,38,38,${baseAlpha*alpha})`;
+    else if (e.type === 'invest')  col = `rgba(124,58,237,${baseAlpha*alpha})`;
+    else                           col = `rgba(217,119,6,${baseAlpha*alpha})`;
+
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+    ctx.strokeStyle = col; ctx.lineWidth = isHL ? 2.2 : 0.8;
+    if (e.type === 'compete') ctx.setLineDash([5,4]); else ctx.setLineDash([]);
+    ctx.stroke(); ctx.setLineDash([]);
+
+    if (isHL || alpha > 0.5) {
+      e.particlePos = (e.particlePos + 0.004) % 1;
+      const px = x1+(x2-x1)*e.particlePos, py = y1+(y2-y1)*e.particlePos;
+      ctx.beginPath(); ctx.arc(px, py, isHL ? 2 : 1, 0, Math.PI*2);
+      const pc = e.type==='partner'?'5,150,105':e.type==='compete'?'220,38,38':e.type==='invest'?'124,58,237':'217,119,6';
+      ctx.fillStyle = `rgba(${pc},${(isHL?0.7:0.22)*alpha})`; ctx.fill();
+    }
+  });
+
+  // ── NODES ──
+  nodes.forEach(n => {
+    if (n.opacity < 0.02) return;
+    const [sx,sy] = wts(n.x, n.y);
+    const sec = SECTORS[n.sector];
+    const isHovered = hoveredNode &amp;&amp; hoveredNode.id === n.id;
+    const isConnected = hoveredNode &amp;&amp; edges.some(e =>
+      (e.s === hoveredNode.id &amp;&amp; e.t === n.id) || (e.t === hoveredNode.id &amp;&amp; e.s === n.id)
+    );
+    const dimmed = hoveredNode &amp;&amp; !isHovered &amp;&amp; !isConnected;
+    const pulse = Math.sin(time*0.003 + n.pulsePhase)*0.05 + 1;
+    const targetR = n.baseRadius * camZoom * (isHovered ? 1.2 : 1) * pulse;
+    n.displayRadius += (targetR - n.displayRadius) * 0.12;
+    const r = n.displayRadius;
+    const nodeAlpha = n.opacity * (dimmed ? 0.1 : 1);
+
+    if (nodeAlpha > 0.1) {
+      const rgb = hexToRgb(sec.color);
+      const sg = ctx.createRadialGradient(sx, sy+r*0.2, r*0.3, sx, sy+r*0.2, r*2.5);
+      sg.addColorStop(0, `rgba(${rgb},${0.1*nodeAlpha})`); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(sx, sy+r*0.2, r*2.5, 0, Math.PI*2); ctx.fillStyle = sg; ctx.fill();
+    }
+
+    ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI*2);
+    const rgb = hexToRgb(sec.color);
+    const bg = ctx.createRadialGradient(sx-r*0.3, sy-r*0.3, 0, sx, sy, r);
+    bg.addColorStop(0, `rgba(255,255,255,${0.97*nodeAlpha})`);
+    bg.addColorStop(1, `rgba(248,248,250,${0.95*nodeAlpha})`);
+    ctx.fillStyle = bg; ctx.fill();
+
+    ctx.strokeStyle = `rgba(${rgb},${(isHovered?0.9:0.55)*nodeAlpha})`;
+    ctx.lineWidth = isHovered ? 2.5 : 1.5;
+    ctx.stroke();
+
+    if (r > 10) {
+      ctx.beginPath(); ctx.arc(sx, sy-r*0.28, r*0.12, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(${rgb},${0.3*nodeAlpha})`; ctx.fill();
+    }
+
+    if (r > 5) {
+      const fontSize = Math.max(6.5, Math.min(12, r * 0.44));
+      ctx.font = `700 ${fontSize}px -apple-system, &quot;Segoe UI&quot;, sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = `rgba(26,26,26,${nodeAlpha*0.9})`;
+      const name = n.name;
+      if (name.length > 14 &amp;&amp; r > 12) {
+        const mid = Math.ceil(name.length / 2);
+        let split = name.lastIndexOf(' ', mid); if (split === -1) split = mid;
+        ctx.fillText(name.slice(0, split), sx, sy - fontSize*0.35);
+        ctx.fillText(name.slice(split+1), sx, sy + fontSize*0.45);
+      } else { ctx.fillText(name, sx, sy); }
+    }
+  });
+
+  const visCount = nodes.filter(n => n.opacity > 0.5).length;
+  document.getElementById('stats').innerHTML =
+    `${C.length} entities · ${E.length} relationships · ~$100–113B market (2025)` +
+    (filterSector ? ` · ${SECTORS[filterSector].label}` : '') +
+    (searchTerm ? ` · Search: &quot;${searchTerm}&quot;` : '') +
+    (criticalOnly ? ' · CRITICAL ONLY' : '');
+}
+
+// ══════════════════════════════════════════════════════════
+// INTERACTION
+// ══════════════════════════════════════════════════════════
+function getNodeAt(sx, sy) {
+  const [wx, wy] = stw(sx, sy);
+  let closest = null, closestDist = Infinity;
+  nodes.forEach(n => {
+    if (n.opacity < 0.1) return;
+    const dx = n.x-wx, dy = n.y-wy;
+    const dist = Math.sqrt(dx*dx+dy*dy);
+    const hitR = n.baseRadius * 1.6 / camZoom;
+    if (dist < hitR &amp;&amp; dist < closestDist) { closest = n; closestDist = dist; }
+  });
+  return closest;
+}
+
+canvas.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  if (dragNode) { const [wx,wy]=stw(e.clientX,e.clientY); dragNode.x=wx; dragNode.y=wy; dragNode.vx=0; dragNode.vy=0; return; }
+  if (isPanning) { targetCamX=panCamStartX-(e.clientX-panStartX)/camZoom; targetCamY=panCamStartY-(e.clientY-panStartY)/camZoom; return; }
+  const node = getNodeAt(e.clientX, e.clientY);
+  hoveredNode = node;
+  canvas.style.cursor = node ? 'pointer' : 'grab';
+
+  if (node) {
+    const sec = SECTORS[node.sector];
+    const conns = edges.filter(e => e.s === node.id || e.t === node.id);
+    const getNames = (type) => conns.filter(e => e.type === type).map(e => {
+      const tid = e.s === node.id ? e.t : e.s; return nodes.find(n => n.id === tid)?.name || tid;
+    });
+    const partners = getNames('partner'), competitors = getNames('compete');
+    const investors = getNames('invest'), customers = getNames('customer');
+
+    tooltip.querySelector('.t-name').textContent = node.name;
+    tooltip.querySelector('.t-name').style.color = sec.color;
+    tooltip.querySelector('.t-sector').textContent = sec.label;
+    tooltip.querySelector('.t-desc').textContent = node.desc;
+    tooltip.querySelector('.t-meta').textContent = node.meta || '';
+    let lnk = '';
+    if (partners.length) lnk += `<div style=&quot;color:#059669&quot;><b>Partners:</b> ${partners.join(', ')}</div>`;
+    if (competitors.length) lnk += `<div style=&quot;color:#dc2626&quot;><b>Competes:</b> ${competitors.join(', ')}</div>`;
+    if (investors.length) lnk += `<div style=&quot;color:#7c3aed&quot;><b>Investors/Owns:</b> ${investors.join(', ')}</div>`;
+    if (customers.length) lnk += `<div style=&quot;color:#d97706&quot;><b>Customer/Supply:</b> ${customers.join(', ')}</div>`;
+    tooltip.querySelector('.t-links').innerHTML = lnk;
+
+    let tx = e.clientX+16, ty = e.clientY-8;
+    if (tx+380 > W) tx = e.clientX-380;
+    if (ty+260 > H) ty = H-270;
+    if (ty < 10) ty = 10;
+    tooltip.style.left = tx+'px'; tooltip.style.top = ty+'px';
+    tooltip.classList.add('visible');
+  } else { tooltip.classList.remove('visible'); }
+});
+
+canvas.addEventListener('mousedown', (e) => {
+  const node = getNodeAt(e.clientX, e.clientY);
+  if (node) { dragNode = node; canvas.style.cursor = 'grabbing'; }
+  else { isPanning=true; panStartX=e.clientX; panStartY=e.clientY; panCamStartX=targetCamX; panCamStartY=targetCamY; canvas.style.cursor='grabbing'; }
+});
+canvas.addEventListener('mouseup', () => { dragNode=null; isPanning=false; canvas.style.cursor=hoveredNode?'pointer':'grab'; });
+canvas.addEventListener('mouseleave', () => { hoveredNode=null; tooltip.classList.remove('visible'); dragNode=null; isPanning=false; });
+canvas.addEventListener('wheel', (e) => { e.preventDefault(); const f=e.deltaY>0?0.93:1.07; targetCamZoom=Math.max(0.2,Math.min(4,targetCamZoom*f)); }, {passive:false});
+
+// Touch
+canvas.addEventListener('touchstart', (e) => { e.preventDefault(); const t=e.touches[0]; const node=getNodeAt(t.clientX,t.clientY); if(node) dragNode=node; else { isPanning=true; panStartX=t.clientX; panStartY=t.clientY; panCamStartX=targetCamX; panCamStartY=targetCamY; } }, {passive:false});
+canvas.addEventListener('touchmove', (e) => { e.preventDefault(); const t=e.touches[0]; if(dragNode){const[wx,wy]=stw(t.clientX,t.clientY);dragNode.x=wx;dragNode.y=wy;dragNode.vx=0;dragNode.vy=0;}else if(isPanning){targetCamX=panCamStartX-(t.clientX-panStartX)/camZoom;targetCamY=panCamStartY-(t.clientY-panStartY)/camZoom;}},{passive:false});
+canvas.addEventListener('touchend', () => { dragNode=null; isPanning=false; });
+
+function onSearch(val) { searchTerm = val.toLowerCase().trim(); }
+function resetView() { targetCamX=W/2; targetCamY=H/2; targetCamZoom=1; filterSector=null; searchTerm=''; criticalOnly=false; document.getElementById('searchInput').value=''; document.querySelectorAll('.legend-item').forEach(e=>e.classList.add('active')); }
+function togglePhysics() { physicsOn=!physicsOn; document.querySelector('.controls button:nth-child(2)').textContent=physicsOn?'Pause Physics':'Resume Physics'; }
+function expandAll() { const cx=W/2,cy=H/2; nodes.forEach(n=>{const dx=n.x-cx,dy=n.y-cy;const dist=Math.sqrt(dx*dx+dy*dy)||1;n.vx+=(dx/dist)*14;n.vy+=(dy/dist)*14;}); }
+function showCritical() { criticalOnly=!criticalOnly; document.querySelector('.controls button:nth-child(4)').textContent=criticalOnly?'Show All':'Critical Only'; }
+
+targetCamX = W/2; targetCamY = H/2;
+
+function frame() { time++; simulate(); draw(); requestAnimationFrame(frame); }
+frame();
+</script>
+</body>
+</html>
+" sandbox="allow-scripts" loading="lazy"></iframe>
+</div>
 
 <!-- ===== GLOSSARY DRAWER ===== -->
 <div class="gd-overlay" id="gdOverlay"></div>
@@ -673,6 +1451,17 @@ mark{background:rgba(232,65,37,.12);color:var(--or);padding:1px 4px;border-radiu
     requestAnimationFrame(step)
   }
 
+
+  // ===== ECOSYSTEM DRAWER =====
+  var ecoDrawer=document.getElementById('ecoDrawer'),ecoOverlay=document.getElementById('ecoOverlay');
+  function openEco(){ecoDrawer.classList.add('open');ecoOverlay.classList.add('open')}
+  function closeEco(){ecoDrawer.classList.remove('open');ecoOverlay.classList.remove('open')}
+  document.getElementById('ecoOpen').addEventListener('click',openEco);
+  document.getElementById('ecoClose').addEventListener('click',closeEco);
+  ecoOverlay.addEventListener('click',closeEco);
+  var mobEco=document.getElementById('mobEcoOpen');
+  if(mobEco)mobEco.addEventListener('click',openEco);
+
   // ===== GLOSSARY DRAWER =====
   var gdDrawer=document.getElementById('gdDrawer'),gdOverlay=document.getElementById('gdOverlay');
   var gdSearch=document.getElementById('gdSearch'),gdTabs=document.querySelectorAll('.gd-tab');
@@ -688,7 +1477,7 @@ mark{background:rgba(232,65,37,.12);color:var(--or);padding:1px 4px;border-radiu
   if(mobGBtn)mobGBtn.addEventListener('click',openGlossary);
 
   // Keyboard
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGlossary()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeGlossary();closeEco()}});
 
   // Sub-tabs
   gdTabs.forEach(function(tab){
